@@ -1,10 +1,24 @@
-# 数码解码 IP 优选器 V1.4
+# 数码解码 IP 优选器 V1.4（Windows / Linux）
 
-一个 Windows 桌面版的 IP 优选测速工具（Python + PySide6）。
+一个桌面版的 IP 优选测速工具（Python + PySide6），支持 Windows 和 Linux Mint。
+
+> ### 📥 Linux Mint：推荐下载 AppImage
+>
+> 在 [Releases 页面](https://github.com/blackhare69/ip-optimizer/releases) 下载
+> `IP-Optimizer-Linux-x86_64.AppImage`，然后在文件属性中勾选“允许作为程序执行”，
+> 双击即可启动。也可以在终端执行：
+>
+> ```bash
+> chmod +x IP-Optimizer-Linux-x86_64.AppImage
+> ./IP-Optimizer-Linux-x86_64.AppImage
+> ```
+>
+> Linux 运行数据默认保存在 `~/.local/share/ip-optimizer/` 下；如果设置了
+> `XDG_DATA_HOME`，则使用该目录。软件不会修改系统代理、DNS、路由表或网络设置。
 
 > ### 📥 不想装 Python？直接下载 exe（免安装）
 >
-> 到 **[Releases 页面](https://github.com/shuma12303/ip-optimizer/releases/latest)**
+> 到 **[Releases 页面](https://github.com/blackhare69/ip-optimizer/releases/latest)**
 > 下载 **`IP-Optimizer-V1.4.2.exe`**（约 36 MB，Windows 10 / 11 64 位）。
 > **双击即用，不需要安装 Python、不需要 `pip install`。**
 > 运行后的日志与导出结果在 **exe 同级**的 `logs\` 与 `output\` 目录里。
@@ -46,7 +60,7 @@ V1.4 新增：**稳定性复测**——对 V1.3 排名中的 TOP IP **重复测�
 | 项目 | 说明 |
 | --- | --- |
 | 名称 | 数码解码 IP 优选器 V1.4 |
-| 类型 | Windows 桌面软件（GUI） |
+| 类型 | Windows / Linux 桌面软件（GUI） |
 | 用途 | 批量导入 IP，通过 TCP → HTTP → 下载 三级测速 + 稳定性复测找出又快又稳的 IP |
 | 测速方式 | 三级流水：TCP 握手（默认 443 / 1000ms）→ HTTPS 连通（默认 3000ms）→ 下载 1MB（默认 10000ms） |
 | 并发方式 | asyncio 异步并发，默认并发 50，最多 500 |
@@ -1253,13 +1267,13 @@ A 记录落在 CF 段 → 第一关 ✅；接下来能不能用，还要看第�
 
 | 方式 | 适合谁 | 需要装 Python 吗 | 步骤 |
 | --- | --- | --- | --- |
-| **下载 exe（推荐）** | 只想用功能的大多数用户 | **不需要** | 到 [Releases](https://github.com/shuma12303/ip-optimizer/releases/latest) 下载 `.exe`，双击 |
+| **下载 exe（推荐）** | 只想用功能的大多数用户 | **不需要** | 到 [Releases](https://github.com/blackhare69/ip-optimizer/releases/latest) 下载 `.exe`，双击 |
 | 源码运行 | 想改代码、审计代码的人 | 需要（3.12+） | 见第 3 章【安装依赖】与第 13.1 节 |
 | 自己打包 | 不信任别人给的 exe 的人 | 需要（3.12+） | 见下面的 16.6 |
 
 ### 16.2 下载与完整性校验
 
-1. 打开 **<https://github.com/shuma12303/ip-optimizer/releases/latest>**；
+1. 打开 **<https://github.com/blackhare69/ip-optimizer/releases/latest>**；
 2. 在 **Assets** 里下载 **`IP-Optimizer-V1.4.2.exe`**（约 36 MB）；
 3. （可选）校验文件是否完整、有没有被中途篡改——在 PowerShell 里执行：
 
@@ -1341,4 +1355,5 @@ python -m PyInstaller --noconfirm --onefile --windowed --name IP-Optimizer-V1.4.
 （`%LOCALAPPDATA%\IPOptimizer\`）以及仓库名一并更名，算法、界面、文件格式没有任何改动。
 如果你之前下载过 V1.4.1 的 exe，它仍然可用，只是旧的下载链接已随本次更名下线；
 V1.4.1 在只读目录里生成的旧数据目录不会再被使用，可以手动删除。
+
 

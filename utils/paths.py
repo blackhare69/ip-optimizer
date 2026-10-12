@@ -1,4 +1,4 @@
-"""运行时路径解析（V1.4.1 新增）。
+"""运行时路径解析（V1.4.1 新增，Linux 支持扩展）。
 
 程序既要用 `python main.py` 直接跑，也要能被 PyInstaller 打包成 exe 分发。
 两种情况下"程序所在目录"的计算方式不同：
@@ -9,7 +9,8 @@
 
 另外，如果用户把 exe 放进 Program Files 这类普通用户不可写的目录，
 直接创建 logs/ 会抛 PermissionError 导致程序打不开，因此这里做一次可写性
-探测，不可写时退回到用户目录（%LOCALAPPDATA% → 我的文档）。
+探测，不可写时退回到用户目录（Windows：%LOCALAPPDATA% → 我的文档；
+Linux：XDG 数据目录 → 用户主目录）。
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ from pathlib import Path
 
 # 回退目录使用的子目录名（英文，避免部分环境读取中文路径出问题）
 FALLBACK_DIR_NAME = "IPOptimizer"
+APP_DIR_NAME = "ip-optimizer"
 
 # 缓存解析结果，避免重复探测文件系统
 _resolved_root: Path | None = None
@@ -34,7 +36,20 @@ def install_root() -> Path:
 
 
 def _candidate_roots() -> list[Path]:
-    """按优先级返回候选数据目录：程序所在目录 → 用户本地数据目录 → 我的文档。"""
+    """按平台优先级返回候选数据目录。"""
+    if sys.platform.startswith("linux"):
+        xdg_data_home = os.environ.get("XDG_DATA_HOME")
+        if not xdg_data_home:
+            xdg_data_home = str(Path.home() / ".local" / "share")
+
+        # AppImage 挂载目录通常不可写，Linux 始终优先使用用户数据目录。
+        return [
+            Path(xdg_data_home) / APP_DIR_NAME,
+            Path.home() / APP_DIR_NAME,
+            install_root(),
+        ]
+
+    # Windows 兼容顺序：程序目录 → 用户本地数据目录 → 我的文档。
     candidates: list[Path] = [install_root()]
 
     local_appdata = os.environ.get("LOCALAPPDATA")
@@ -83,3 +98,4 @@ OUTPUT_DIR = DATA_ROOT / "output"
 def is_packaged() -> bool:
     """当前是否运行在 PyInstaller 打包后的环境里。"""
     return bool(getattr(sys, "frozen", False))
+

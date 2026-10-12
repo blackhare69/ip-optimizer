@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=数码解码 IP 优选器
+Comment=Cloudflare IP 自动获取、测速与稳定性排名
+Exec=IPOptimizer
+Icon=ip-optimizer
+Terminal=false
+Categories=Network;Utility;
+StartupNotify=true
+
