@@ -5,6 +5,6 @@ Comment=Cloudflare IP 自动获取、测速与稳定性排名
 Exec=IPOptimizer
 Icon=ip-optimizer
 Terminal=false
-Categories=Network;Utility;
+Categories=Network;
 StartupNotify=true
 
