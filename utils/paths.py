@@ -49,6 +49,20 @@ def _candidate_roots() -> list[Path]:
             install_root(),
         ]
 
+    if sys.platform == "darwin":
+        candidates: list[Path] = [
+            Path.home() / "Library" / "Application Support" / APP_DIR_NAME
+        ]
+
+        xdg_data_home = os.environ.get("XDG_DATA_HOME")
+        if xdg_data_home:
+            xdg_root = Path(xdg_data_home) / APP_DIR_NAME
+            if xdg_root not in candidates:
+                candidates.append(xdg_root)
+
+        candidates.append(install_root())
+        return candidates
+
     # Windows 兼容顺序：程序目录 → 用户本地数据目录 → 我的文档。
     candidates: list[Path] = [install_root()]
 

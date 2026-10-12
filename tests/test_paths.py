@@ -64,6 +64,69 @@ class TestLinuxDataRoots(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
+class TestMacOSDataRoots(unittest.TestCase):
+    def test_macos_prefers_application_support_directory(self):
+        home = Path("/Users/tester")
+        install = Path("/Applications/IPOptimizer.app/Contents/MacOS")
+
+        with (
+            patch.object(paths.sys, "platform", "darwin"),
+            patch.object(paths.Path, "home", return_value=home),
+            patch.dict(os.environ, {}, clear=True),
+            patch.object(paths, "install_root", return_value=install),
+        ):
+            roots = paths._candidate_roots()
+
+        self.assertEqual(
+            roots,
+            [home / "Library" / "Application Support" / paths.APP_DIR_NAME, install],
+        )
+
+    def test_macos_uses_explicit_xdg_directory_as_second_candidate(self):
+        home = Path("/Users/tester")
+        xdg_data_home = Path("/tmp/xdg-data")
+        install = Path("/Applications/IPOptimizer.app/Contents/MacOS")
+
+        with (
+            patch.object(paths.sys, "platform", "darwin"),
+            patch.object(paths.Path, "home", return_value=home),
+            patch.dict(os.environ, {"XDG_DATA_HOME": str(xdg_data_home)}, clear=True),
+            patch.object(paths, "install_root", return_value=install),
+        ):
+            roots = paths._candidate_roots()
+
+        self.assertEqual(
+            roots,
+            [
+                home / "Library" / "Application Support" / paths.APP_DIR_NAME,
+                xdg_data_home / paths.APP_DIR_NAME,
+                install,
+            ],
+        )
+
+    def test_macos_data_root_uses_first_writable_directory(self):
+        home = Path("/Users/tester")
+        xdg_data_home = Path("/tmp/xdg-data")
+        install = Path("/Applications/IPOptimizer.app/Contents/MacOS")
+        expected = xdg_data_home / paths.APP_DIR_NAME
+
+        with (
+            patch.object(paths.sys, "platform", "darwin"),
+            patch.object(paths.Path, "home", return_value=home),
+            patch.dict(os.environ, {"XDG_DATA_HOME": str(xdg_data_home)}, clear=True),
+            patch.object(paths, "_is_writable", side_effect=[False, True]),
+            patch.object(paths, "install_root", return_value=install),
+        ):
+            old_root = paths._resolved_root
+            paths._resolved_root = None
+            try:
+                actual = paths.data_root()
+            finally:
+                paths._resolved_root = old_root
+
+        self.assertEqual(actual, expected)
+
+
 if __name__ == "__main__":
     unittest.main()
 

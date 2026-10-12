@@ -1,6 +1,6 @@
-# 数码解码 IP 优选器 V1.4（Windows / Linux）
+# 数码解码 IP 优选器 V1.4（Windows / Linux / macOS Intel）
 
-一个桌面版的 IP 优选测速工具（Python + PySide6），支持 Windows 和 Linux Mint。
+一个桌面版的 IP 优选测速工具（Python + PySide6），支持 Windows、Linux Mint 和 macOS Intel。
 
 > ### 📥 Linux Mint：推荐下载 AppImage
 >
@@ -15,6 +15,16 @@
 >
 > Linux 运行数据默认保存在 `~/.local/share/ip-optimizer/` 下；如果设置了
 > `XDG_DATA_HOME`，则使用该目录。软件不会修改系统代理、DNS、路由表或网络设置。
+
+> ### 📥 macOS Intel：下载 DMG
+>
+> 在 [Releases 页面](https://github.com/blackhare69/ip-optimizer/releases/latest) 下载
+> `IP-Optimizer-macOS-Intel.dmg`。这是适用于 Intel Mac 的 `x86_64` 版本。
+> 打开 DMG 后，将 `IPOptimizer.app` 拖入“应用程序”文件夹。
+>
+> 首次启动如果被 macOS 拦截，请在 Finder 中**右键应用并选择“打开”**，然后确认打开。
+> 首版发布包未签名、未公证，不要关闭系统安全保护。
+> macOS 运行数据默认保存在 `~/Library/Application Support/ip-optimizer/`。
 
 > ### 📥 不想装 Python？直接下载 exe（免安装）
 >
@@ -60,7 +70,7 @@ V1.4 新增：**稳定性复测**——对 V1.3 排名中的 TOP IP **重复测�
 | 项目 | 说明 |
 | --- | --- |
 | 名称 | 数码解码 IP 优选器 V1.4 |
-| 类型 | Windows / Linux 桌面软件（GUI） |
+| 类型 | Windows / Linux / macOS Intel 桌面软件（GUI） |
 | 用途 | 批量导入 IP，通过 TCP → HTTP → 下载 三级测速 + 稳定性复测找出又快又稳的 IP |
 | 测速方式 | 三级流水：TCP 握手（默认 443 / 1000ms）→ HTTPS 连通（默认 3000ms）→ 下载 1MB（默认 10000ms） |
 | 并发方式 | asyncio 异步并发，默认并发 50，最多 500 |
