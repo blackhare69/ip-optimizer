@@ -40,4 +40,3 @@ hdiutil create \
 test -s "${DMG_PATH}"
 echo "Created ${APP_PATH}"
 echo "Created ${DMG_PATH}"
-

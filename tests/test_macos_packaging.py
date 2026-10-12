@@ -23,6 +23,11 @@ class TestMacOSPackagingContracts(unittest.TestCase):
             with self.subTest(token=token):
                 self.assertIn(token, script)
 
+    def test_macos_build_script_uses_unix_line_endings(self):
+        script_path = PROJECT_ROOT / "packaging" / "build-macos-app.sh"
+        script_bytes = script_path.read_bytes()
+        self.assertNotIn(b"\r\n", script_bytes)
+
     def test_macos_workflow_contract(self):
         workflow_path = PROJECT_ROOT / ".github" / "workflows" / "macos-intel.yml"
         self.assertTrue(workflow_path.exists(), "macOS Intel workflow is missing")
@@ -63,4 +68,3 @@ class TestMacOSPackagingContracts(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
