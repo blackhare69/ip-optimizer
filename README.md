@@ -22,7 +22,10 @@
 > `IP-Optimizer-macOS-Intel.dmg`。这是适用于 Intel Mac 的 `x86_64` 版本。
 > 打开 DMG 后，将 `IPOptimizer.app` 拖入“应用程序”文件夹。
 >
-> 首次启动如果被 macOS 拦截，请在 Finder 中**右键应用并选择“打开”**，然后确认打开。
+> 本包要求 macOS 14.4 或更高版本。
+> 首次启动如果被 macOS 拦截，请在 Finder 中**右键应用并选择“打开”**，然后确认打开；
+> 在 macOS Sequoia（macOS 15）或更高版本，如果仍被拦截，请打开
+> **“系统设置 → 隐私与安全性”**，在安全性提示处点击**“仍要打开”**，再确认启动。
 > 首版发布包未签名、未公证，不要关闭系统安全保护。
 > macOS 运行数据默认保存在 `~/Library/Application Support/ip-optimizer/`。
 
@@ -1365,5 +1368,4 @@ python -m PyInstaller --noconfirm --onefile --windowed --name IP-Optimizer-V1.4.
 （`%LOCALAPPDATA%\IPOptimizer\`）以及仓库名一并更名，算法、界面、文件格式没有任何改动。
 如果你之前下载过 V1.4.1 的 exe，它仍然可用，只是旧的下载链接已随本次更名下线；
 V1.4.1 在只读目录里生成的旧数据目录不会再被使用，可以手动删除。
-
 

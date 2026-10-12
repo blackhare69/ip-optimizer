@@ -60,7 +60,9 @@ def _candidate_roots() -> list[Path]:
             if xdg_root not in candidates:
                 candidates.append(xdg_root)
 
-        candidates.append(install_root())
+        # Never write persistent data into the .app bundle: it can be read-only
+        # and is replaced wholesale when the user installs an update.
+        candidates.append(Path.home() / "Documents" / FALLBACK_DIR_NAME)
         return candidates
 
     # Windows 兼容顺序：程序目录 → 用户本地数据目录 → 我的文档。
@@ -98,8 +100,12 @@ def data_root() -> Path:
             _resolved_root = candidate
             return _resolved_root
 
-    # 全部探测失败：退回安装目录，让后续 logging / 导出模块给出具体中文报错
-    _resolved_root = install_root()
+    # 全部探测失败：macOS 仍使用用户目录，不能把数据写进可替换的 .app 包。
+    if sys.platform == "darwin":
+        _resolved_root = Path.home() / "Documents" / FALLBACK_DIR_NAME
+    else:
+        # 退回安装目录，让后续 logging / 导出模块给出具体中文报错
+        _resolved_root = install_root()
     return _resolved_root
 
 
@@ -112,4 +118,3 @@ OUTPUT_DIR = DATA_ROOT / "output"
 def is_packaged() -> bool:
     """当前是否运行在 PyInstaller 打包后的环境里。"""
     return bool(getattr(sys, "frozen", False))
-

@@ -79,7 +79,10 @@ class TestMacOSDataRoots(unittest.TestCase):
 
         self.assertEqual(
             roots,
-            [home / "Library" / "Application Support" / paths.APP_DIR_NAME, install],
+            [
+                home / "Library" / "Application Support" / paths.APP_DIR_NAME,
+                home / "Documents" / paths.FALLBACK_DIR_NAME,
+            ],
         )
 
     def test_macos_uses_explicit_xdg_directory_as_second_candidate(self):
@@ -100,9 +103,30 @@ class TestMacOSDataRoots(unittest.TestCase):
             [
                 home / "Library" / "Application Support" / paths.APP_DIR_NAME,
                 xdg_data_home / paths.APP_DIR_NAME,
-                install,
+                home / "Documents" / paths.FALLBACK_DIR_NAME,
             ],
         )
+
+    def test_macos_data_root_never_uses_install_root_as_fallback(self):
+        home = Path("/Users/tester")
+        install = Path("/Applications/IPOptimizer.app/Contents/MacOS")
+        expected = home / "Documents" / paths.FALLBACK_DIR_NAME
+
+        with (
+            patch.object(paths.sys, "platform", "darwin"),
+            patch.object(paths.Path, "home", return_value=home),
+            patch.dict(os.environ, {}, clear=True),
+            patch.object(paths, "_is_writable", return_value=False),
+            patch.object(paths, "install_root", return_value=install),
+        ):
+            old_root = paths._resolved_root
+            paths._resolved_root = None
+            try:
+                actual = paths.data_root()
+            finally:
+                paths._resolved_root = old_root
+
+        self.assertEqual(actual, expected)
 
     def test_macos_data_root_uses_first_writable_directory(self):
         home = Path("/Users/tester")
@@ -129,4 +153,3 @@ class TestMacOSDataRoots(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
